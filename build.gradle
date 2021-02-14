@@ -5,7 +5,7 @@ android {
     buildToolsVersion "30.0.1"
 
     defaultConfig {
-        applicationId "com.sim.game_tp1"
+        applicationId "com.sim.game_tp3"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
