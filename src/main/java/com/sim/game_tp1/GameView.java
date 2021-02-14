@@ -18,9 +18,16 @@ public class GameView extends SurfaceView implements Runnable {
     private int screenX, screenY;
     public static float screenRatioX, screenRatioY;
     private Paint paint;
-    Jump jump;
-    Obstacle obstacle1, obstacle2, obstacle3, obstacle4;
-    Surprise surprise1;
+    int refX = 0;
+    int refY=0;
+
+    Bitmap tuile0, tuile1, tuile2, tuile3, tuile4, tuile5, tuile6, tuile7, tuile8, tuile9, tuile10;
+
+    int tileH, tileW;
+
+    Bitmap finalBitmap;
+    Canvas canvas;
+
 
     public GameView(Context context, int screenX, int screenY) {
         super(context);
@@ -28,24 +35,30 @@ public class GameView extends SurfaceView implements Runnable {
         this.screenX = screenX;
         this.screenY = screenY;
 
-        this.screenRatioX = 1920f / screenX;
-        this.screenRatioY = 1080f / screenY;
+        Bitmap tileset = BitmapFactory.decodeResource(getResources(), R.drawable.tilest);
 
-        background1 = new Background(screenX, screenY, getResources());
-        background2 = new Background(screenX, screenY, getResources());
+        tileH = tileset.getHeight();
+        tileW = tileH;
 
-        jump = new Jump(screenY, getResources());
-        obstacle1 = new Obstacle(getResources(), R.drawable.obstacle1, background1.background);
-        obstacle2 = new Obstacle(getResources(), R.drawable.obstacle2, background1.background);
-        obstacle3 = new Obstacle(getResources(), R.drawable.obstacle1, background1.background);
-        obstacle4 = new Obstacle(getResources(), R.drawable.obstacle2, background1.background);
-
-        surprise1=new Surprise(getResources(), R.drawable.surprise1, background1.background);
+        finalBitmap = Bitmap.createBitmap(tileW * 32, tileH * 13, Bitmap.Config.ARGB_8888);
+        canvas = new Canvas(finalBitmap);
 
 
-        background2.x = screenX;
+        tuile0 = Bitmap.createBitmap(tileset, tileW * 0, 0, tileW, tileH);
+        tuile1 = Bitmap.createBitmap(tileset, tileW * 1, 0, tileW, tileH);
+        tuile2 = Bitmap.createBitmap(tileset, tileW * 2, 0, tileW, tileH);
+        tuile3 = Bitmap.createBitmap(tileset, tileW * 3, 0, tileW, tileH);
+        tuile4 = Bitmap.createBitmap(tileset, tileW * 4, 0, tileW, tileH);
+        tuile5 = Bitmap.createBitmap(tileset, tileW * 5, 0, tileW, tileH);
+        tuile6 = Bitmap.createBitmap(tileset, tileW * 6, 0, tileW, tileH);
+        tuile7 = Bitmap.createBitmap(tileset, tileW * 7, 0, tileW, tileH);
+        tuile8 = Bitmap.createBitmap(tileset, tileW * 8, 0, tileW, tileH);
+        tuile9 = Bitmap.createBitmap(tileset, tileW * 9, 0, tileW, tileH);
+        tuile10 = Bitmap.createBitmap(tileset, tileW * 10, 0, tileW, tileH);
 
-        paint = new Paint();
+        //canvas.drawBitmap(tuile0,0,0,null);
+
+
     }
 
     @Override
@@ -61,73 +74,7 @@ public class GameView extends SurfaceView implements Runnable {
     int cnt = 0;
 
     public void update() {
-        background1.x -= 10 ;
-        background2.x -= 10 ;
 
-        // faire bouger les obstacles
-        obstacle1.x = background1.x + 600;
-        obstacle2.x = obstacle1.x + obstacle1.bitmap.getWidth() + 640;
-        obstacle3.x = background2.x + 700;
-        obstacle4.x = obstacle3.x + obstacle3.bitmap.getWidth() + 500;
-
-
-
-        if(surprise1.isDisplayed==true){
-            // faire bouger le bitmap de la surprise
-            surprise1.x-=10;
-        }
-
-
-        if(surprise1.isDisplayed==false){
-            if(surprise1.delaiCounter==surprise1.delai){
-                surprise1.isDisplayed=true;
-                surprise1.delaiCounter=0;
-            }
-            else
-                surprise1.delaiCounter++;
-        }
-
-
-        if(surprise1.isDisplayed==true){
-            if(surprise1.durationCounter==surprise1.duration){
-                surprise1.isDisplayed=false;
-                surprise1.initSurprise(background1.background);
-                surprise1.durationCounter=0;
-            }
-            else
-                surprise1.durationCounter++;
-        }
-
-
-
-        if (background1.x + background1.background.getWidth() < 0) {
-            background1.x = screenX;
-        }
-
-        if (background2.x + background2.background.getWidth() < 0) {
-            background2.x = screenX;
-        }
-
-        if (jump.isGoingUp) {
-            if (jump.y > screenY / 2 - 50) {
-                jump.y -= 300;
-            }
-            cnt++;
-            if (cnt == 14) jump.isGoingUp = false;
-
-        } else {
-            jump.y += 30;
-            cnt = 0;
-
-        }
-
-        if (jump.y < 0) {
-            jump.y = 0;
-        }
-
-        if (jump.y > screenY - jump.height) {
-            jump.y = screenY - jump.height;
-        }
 
     }
 
@@ -135,78 +82,40 @@ public class GameView extends SurfaceView implements Runnable {
     public void draw() {
         if (getHolder().getSurface().isValid()) {
             Canvas canvas = getHolder().lockCanvas();
-            canvas.drawBitmap(background1.background, background1.x, background1.y, paint);
-            canvas.drawBitmap(background2.background, background2.x, background2.y, paint);
 
-            canvas.drawBitmap(jump.getJump(), jump.x, jump.y, paint);
+            //canvas.setBitmap(finalBitmap);
 
-            canvas.drawBitmap(obstacle1.getBitmap(), obstacle1.x, obstacle1.y, paint);
-            canvas.drawBitmap(obstacle2.getBitmap(), obstacle2.x, obstacle2.y, paint);
-            canvas.drawBitmap(obstacle3.getBitmap(), obstacle3.x, obstacle3.y, paint);
-            canvas.drawBitmap(obstacle4.getBitmap(), obstacle4.x, obstacle4.y, paint);
-
-            if(surprise1.isDisplayed==true)
-                canvas.drawBitmap(surprise1.getBitmap(), surprise1.x, surprise1.y, paint);
+            //print all tuile0
+            for (int i = 0; i < 32; i++) {
+                for (int j = 0; j < 12; j++) {
+                    canvas.drawBitmap(tuile0, tileW * i, tileH * j, null);
+                }
+            }
 
 
+            //built10
+            for (int i = 0; i < 4; i++) {
+                canvas.drawBitmap(tuile10, tileW * (7 - refX), tileH * i, null);
+            }
+
+            //built10
+            for (int i = 0; i < 4; i++) {
+                canvas.drawBitmap(tuile10, tileW * (27 - refX), tileH * i, null);
+            }
+
+            //tuile2
+            canvas.drawBitmap(tuile2, tileW * (24 - refX), tileH * 4, null);
 
 
-            canvas.drawRect(obstacle1.getRect(), paint);
-            canvas.drawRect(obstacle2.getRect(), paint);
-            canvas.drawRect(obstacle3.getRect(), paint);
-            canvas.drawRect(obstacle4.getRect(), paint);
+            //tuile1 bottom
+            for (int i = 0; i < 32; i++) {
+                for (int j = 10; j < 12; j++) {
+                    canvas.drawBitmap(tuile1, tileW * i, tileH * j, null);
+                }
+            }
 
 
-
-
-/*            float x1=228*screenX/600, x2=293*screenX/600;
-            float y1=215*screenY/303, y2=303*screenY/303;
-
-            Rect rect11=new Rect(background1.x+(int)+x1,background1.y+(int)y1, background1.x+(int)x2, background1.y+(int)y2);
-            canvas.drawRect(rect11,paint);
-
-            Rect rect21=new Rect(background2.x+(int)+x1,background2.y+(int)y1, background2.x+(int)x2, background2.y+(int)y2);
-            canvas.drawRect(rect21,paint);
-
-            float x3=464*screenX/600, x4=534*screenX/600;
-            float y3=235*screenY/303, y4=303*screenY/303;
-
-            Rect rect12=new Rect(background1.x+(int)+x3,background1.y+(int)y3, background1.x+(int)x4, background1.y+(int)y4);
-            canvas.drawRect(rect12,paint);
-
-            Rect rect22=new Rect(background2.x+(int)+x3,background2.y+(int)y3, background2.x+(int)x4, background2.y+(int)y4);
-            canvas.drawRect(rect22,paint);*/
-
-
-            Rect rect_sprit = new Rect(jump.x, jump.y, jump.x + jump.getJump().getWidth(), jump.y + jump.getJump().getHeight());
-            canvas.drawRect(rect_sprit, paint);
-
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(10);
-            paint.setColor(Color.RED);
-
-
-            Bitmap collision = BitmapFactory.decodeResource(getResources(), R.drawable.collision);
-
-            if (rect_sprit.intersect(obstacle1.getRect())
-                    || rect_sprit.intersect(obstacle2.getRect())
-                    || rect_sprit.intersect(obstacle3.getRect())
-                    || rect_sprit.intersect(obstacle4.getRect()))
-                canvas.drawBitmap(collision,screenX/2 - collision.getWidth()/2,50,paint);
-
- /*           if(rect_sprit.intersect(rect11) )
-                canvas.drawBitmap(collision,screenX/2 - collision.getWidth()/2,50,paint);
-
-            if(rect_sprit.intersect(rect12) )
-                canvas.drawBitmap(collision,screenX/2 - collision.getWidth()/2,50,paint);
-            if(rect_sprit.intersect(rect21) )
-                canvas.drawBitmap(collision,screenX/2 - collision.getWidth()/2,50,paint);
-            if(rect_sprit.intersect(rect22) )
-                canvas.drawBitmap(collision,screenX/2 - collision.getWidth()/2,50,paint);
-*/
-
-
-                getHolder().unlockCanvasAndPost(canvas);
+            getHolder().unlockCanvasAndPost(canvas);
         }
     }
 
@@ -238,12 +147,18 @@ public class GameView extends SurfaceView implements Runnable {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                // touch left of screen
                 if (event.getX() < screenX / 2) {
-                    jump.isGoingUp = true;
+                    refX++;
+                }
+
+                // touch right of screen
+                if (event.getX() > screenX / 2) {
+                    refX--;
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                jump.isGoingUp = false;
+
                 break;
         }
         return true;
