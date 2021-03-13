@@ -1,4 +1,4 @@
-package com.sim.game_tp1;
+package com.sim.game_tp3;
 
 import androidx.appcompat.app.AppCompatActivity;
 

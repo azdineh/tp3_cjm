@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="com.sim.game_tp3.MainActivity">
 
     <ImageView
         android:layout_width="match_parent"
@@ -16,12 +16,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="48sp"
-        android:text="I Have To Jump"
         android:layout_above="@id/play"
         android:layout_below="@id/highscoretxt"
+        android:layout_centerHorizontal="true"
+        android:text="Super Mario"
         android:textColor="#ffffff"
-        android:layout_centerHorizontal="true"/>
+        android:textSize="48sp" />
     
     <TextView
         android:layout_width="wrap_content"

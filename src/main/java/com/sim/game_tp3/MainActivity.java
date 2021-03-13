@@ -1,4 +1,4 @@
-package com.sim.game_tp1;
+package com.sim.game_tp3;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+
+import com.sim.game_tp1.R;
 
 public class MainActivity extends AppCompatActivity {
 
